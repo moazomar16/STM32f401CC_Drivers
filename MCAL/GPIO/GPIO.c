@@ -851,10 +851,10 @@ static ENM_ErrorStatus_t gpioSetMode(GPIO_REG_t * GPIO_PORT, GPIO_PIN_t gpioPin,
     /* load the value of mode reg */
     locRegister= GPIO_PORT->MODE;
     /* Clear the required pin  Mode configuration */
-    locRegister &= ~(0x3<<gpioPin);
+    locRegister &= ~(0x3<<(gpioPin*2));
     /* Assign the required pin with Mode configuration */
-    locRegister |= (pinMode<<gpioPin);
-    GPIO_PORT->MODE=locRegister;
+    locRegister |= (pinMode<<(gpioPin*2));
+    GPIO_PORT->MODE = locRegister;
     locStatus = enm_Status_OK;
     return locStatus;
 }
@@ -879,9 +879,9 @@ static ENM_ErrorStatus_t gpioSpeed(GPIO_REG_t * GPIO_PORT, GPIO_PIN_t gpioPin, u
     /* load the value of mode reg */
     locRegister= GPIO_PORT->OSPEED;
     /* Clear the required pin  Mode configuration */
-    locRegister &= ~(0x3<<gpioPin);
+    locRegister &= ~(0x3<<(gpioPin*2));
     /* Assign the required pin with Mode configuration */
-    locRegister |= (pinSpeed<<gpioPin);
+    locRegister |= (pinSpeed<<(gpioPin*2));
     GPIO_PORT->OSPEED=locRegister;
     locStatus = enm_Status_OK;
     return locStatus;
@@ -893,9 +893,9 @@ static ENM_ErrorStatus_t gpioSetPullState(GPIO_REG_t * GPIO_PORT, GPIO_PIN_t gpi
     /* load the value of mode reg */
     locRegister= GPIO_PORT->PUPD;
     /* Clear the required pin  Mode configuration */
-    locRegister &= ~(0x3<<gpioPin);
+    locRegister &= ~(0x3<<(gpioPin*2));
     /* Assign the required pin with Mode configuration */
-    locRegister |= (pinPullState<<gpioPin);
+    locRegister |= (pinPullState<<(gpioPin*2));
     GPIO_PORT->PUPD=locRegister;
     locStatus = enm_Status_OK;
     return locStatus;

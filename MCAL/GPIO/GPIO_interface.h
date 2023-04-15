@@ -116,11 +116,11 @@
 /**
  * @brief pin output Speed High
  **/
-#define HIGH_SPEED                  0x10
+#define HIGH_SPEED                  0x02
 /**
  * @brief pin output Speed Very High
  **/
-#define VERY_HIGH_SPEED             0x11
+#define VERY_HIGH_SPEED             0x03
 
 /**
 * @brief Pin state low
