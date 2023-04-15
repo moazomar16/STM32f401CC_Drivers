@@ -14,8 +14,8 @@
 
   const LED_Config_t LEDs[MAX_LED_NUMBER]={
           [LED_Alarm]={
-                  .port=GPIO_PORT_A,
-                  .pin=gpioPin_0,
+                  .port=GPIO_PORT_C,
+                  .pin=gpioPin_13,
                   .mode=LED_ACTIVE_HIGH,
                   .speed=HIGH_SPEED,
                   .color=RED,
@@ -23,7 +23,7 @@
                   .intiState=LED_ON
           },
           [LED_Stop]={
-              .port=GPIO_PORT_B,
+              .port=GPIO_PORT_C,
               .pin=gpioPin_1,
               .mode=LED_ACTIVE_LOW,
               .speed=HIGH_SPEED,
@@ -32,7 +32,7 @@
               .intiState=LED_OFF
           },
           [LED_Start]={
-                  .port=GPIO_PORT_B,
+                  .port=GPIO_PORT_C,
                   .pin=gpioPin_5,
                   .mode=LED_ACTIVE_LOW,
                   .speed=HIGH_SPEED,
@@ -41,8 +41,8 @@
                   .intiState=LED_OFF
           },
           [LED_Run]={
-                  .port=GPIO_PORT_A,
-                  .pin=gpioPin_1,
+                  .port=GPIO_PORT_C,
+                  .pin=gpioPin_10,
                   .mode=LED_ACTIVE_HIGH,
                   .speed=HIGH_SPEED,
                   .color=BLUE,

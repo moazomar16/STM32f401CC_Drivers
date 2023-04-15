@@ -19,14 +19,14 @@
 /**
  * @brief led mode output push pull and pull up (Active High)
  **/
-#define LED_ACTIVE_HIGH     1
+#define LED_ACTIVE_HIGH     0
 /**
  * @brief led mode output push pull and pull down (Active Low)
  */
-#define LED_ACTIVE_LOW      0
+#define LED_ACTIVE_LOW      1
 
-#define LED_ON       1
-#define LED_OFF        0
+#define LED_ON          1
+#define LED_OFF         0
 
 /**
  * @brief Maximum number of led
