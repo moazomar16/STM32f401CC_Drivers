@@ -723,7 +723,10 @@ ENM_ERROR_STATUS_t rcc_ChangeSystemClock(uint32_t SystemClock);
  *                  7.BUS_AHB1_CRC
  *                  8.BUS_AHB1_DMA1
  *                  9.BUS_AHB1_DMA2
- *                  10BUS_AHB1_ALL
+ *                  10.BUS_AHB1_ALL
+*           @param
+ *                  1.ENABLE_PERIPHERAL
+ *                  2.DISABLE_PERIPHERAL
  *
  **/
 ENM_ERROR_STATUS_t rcc_AHP1BusPeripheralControl(ENM_PeripheralControl_t StatePeripheral ,uint32_t Peripheral);

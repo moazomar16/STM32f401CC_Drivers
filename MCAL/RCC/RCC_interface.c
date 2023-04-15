@@ -241,11 +241,11 @@ ENM_ERROR_STATUS_t rcc_AHP1BusPeripheralControl(ENM_PeripheralControl_t StatePer
         else if (StatePeripheral == DISABLE_PERIPHERAL)
         {
             /* get the current value of the CR register*/
-            loc_register = RCC->AHB1RSTR;
+            loc_register = RCC->AHB1ENR;
             /* add the new param to the local variable*/
-            loc_register |= (loc_peripheral & (~RCC_AHB_1_CHECK));
+            loc_register &= ~(loc_peripheral & (~RCC_AHB_1_CHECK));
             /* assign the register with the new value */
-            RCC->AHB1RSTR = loc_register;
+            RCC->AHB1ENR = loc_register;
             /* wait for the systemClock to be ready or time out*/
             loc_status=enmRCC_Status_OK;
         }
@@ -284,11 +284,11 @@ ENM_ERROR_STATUS_t rcc_AHP2BusPeripheralControl(ENM_PeripheralControl_t StatePer
         else if (StatePeripheral == DISABLE_PERIPHERAL)
         {
             /* get the current value of the CR register*/
-            loc_register = RCC->AHB2RSTR;
+            loc_register = RCC->AHB2ENR;
             /* add the new param to the local variable*/
-            loc_register |= (loc_peripheral & (~RCC_AHB_2_CHECK));
+            loc_register &= ~(loc_peripheral & (~RCC_AHB_2_CHECK));
             /* assign the register with the new value */
-            RCC->AHB2RSTR = loc_register;
+            RCC->AHB2ENR = loc_register;
             /* wait for the systemClock to be ready or time out*/
             loc_status=enmRCC_Status_OK;
         }
@@ -327,11 +327,11 @@ ENM_ERROR_STATUS_t rcc_APB1BusPeripheralControl(ENM_PeripheralControl_t StatePer
         else if (StatePeripheral == DISABLE_PERIPHERAL)
         {
             /* get the current value of the CR register*/
-            loc_register = RCC->APB1RSTR;
+            loc_register = RCC->APB1ENR;
             /* add the new param to the local variable*/
-            loc_register |= (loc_peripheral & (~RCC_APB_1_CHECK));
+            loc_register &= ~ (loc_peripheral & (~RCC_APB_1_CHECK));
             /* assign the register with the new value */
-            RCC->APB1RSTR = loc_register;
+            RCC->APB1ENR = loc_register;
             /* wait for the systemClock to be ready or time out*/
             loc_status=enmRCC_Status_OK;
         }
@@ -370,11 +370,11 @@ ENM_ERROR_STATUS_t rcc_APB2BusPeripheralControl(ENM_PeripheralControl_t StatePer
         else if (StatePeripheral == DISABLE_PERIPHERAL)
         {
             /* get the current value of the CR register*/
-            loc_register = RCC->APB2RSTR;
+            loc_register = RCC->APB2ENR;
             /* add the new param to the local variable*/
-            loc_register |= (loc_peripheral & (~RCC_APB_2_CHECK));
+            loc_register &= ~ (loc_peripheral & (~RCC_APB_2_CHECK));
             /* assign the register with the new value */
-            RCC->APB2RSTR = loc_register;
+            RCC->APB2ENR = loc_register;
             /* wait for the systemClock to be ready or time out*/
             loc_status=enmRCC_Status_OK;
         }
