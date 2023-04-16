@@ -54,7 +54,7 @@
 #define NVIC_IPR_20            *((vuint32_t *) 0xE000E450)
 #define NVIC_IPR_21            *((vuint32_t *) 0xE000E454)
 #define NVIC_IPR_22            *((vuint32_t *) 0xE000E458)
-*/
+ */
 #define NVIC_STIR               *((vuint32_t *) 0xE000EF00)
 
 /**
@@ -69,54 +69,54 @@
  **/
 typedef struct{
 
-    /**
-     * @brief Interrupt set-enable register
-     **/
-    vuint32_t ISER         [ 32 ];
-    /**
-     * @brief Interrupt clear-enable register
-     **/
-    vuint32_t ICER         [ 32 ];
-    /**
-     * @brief Interrupt set-pending register
-     **/
-    vuint32_t ISPR         [ 32 ];
-    /**
-     * @brief Interrupt clear-pending register
-     **/
-    vuint32_t ICPR         [ 32 ];
-    /**
-     * @brief Interrupt active bit register
-     **/
-    vuint32_t IAPR         [ 32 ];
-    /**
-     * @brief reserved locations
-     **/
-    vuint32_t RESERVED     [ 32 ];
-    /**
-     * @brief Interrupt priority register
-     **/
-    vuint8_t IPR           [ 128];
+	/**
+	 * @brief Interrupt set-enable register
+	 **/
+	vuint32_t ISER         [ 32 ];
+	/**
+	 * @brief Interrupt clear-enable register
+	 **/
+	vuint32_t ICER         [ 32 ];
+	/**
+	 * @brief Interrupt set-pending register
+	 **/
+	vuint32_t ISPR         [ 32 ];
+	/**
+	 * @brief Interrupt clear-pending register
+	 **/
+	vuint32_t ICPR         [ 32 ];
+	/**
+	 * @brief Interrupt active bit register
+	 **/
+	vuint32_t IAPR         [ 32 ];
+	/**
+	 * @brief reserved locations
+	 **/
+	vuint32_t RESERVED     [ 32 ];
+	/**
+	 * @brief Interrupt priority register
+	 **/
+	vuint8_t IPR           [ 128];
 
 }NVIC_REG_t;
 
 typedef struct{
 
-   vuint32_t CPUID;
-   vuint32_t ICSR;
-   vuint32_t VTOR;
-   vuint32_t AIRCR;
-   vuint32_t SCR;
-   vuint32_t CCR;
-   vuint32_t SHPR1;
-   vuint32_t SHPR2;
-   vuint32_t SHPR3;
-   vuint32_t SHCSR;
-   vuint32_t CFSR;
-   vuint32_t HFSR;
-   vuint32_t RESERVED;
-   vuint32_t MMFAR;
-   vuint32_t BFAR;
+	vuint32_t CPUID;
+	vuint32_t ICSR;
+	vuint32_t VTOR;
+	vuint32_t AIRCR;
+	vuint32_t SCR;
+	vuint32_t CCR;
+	vuint32_t SHPR1;
+	vuint32_t SHPR2;
+	vuint32_t SHPR3;
+	vuint32_t SHCSR;
+	vuint32_t CFSR;
+	vuint32_t HFSR;
+	vuint32_t RESERVED;
+	vuint32_t MMFAR;
+	vuint32_t BFAR;
 
 }SCB_REG_t;
 
@@ -140,203 +140,203 @@ static ENM_NVIC_ERROR_STATUS_t nvicGetPriorityGrouping(uint32_t *priorityGroupin
 
 ENM_NVIC_ERROR_STATUS_t nvicEnableIrq(ENM_ISQ_t interruptRequestNumber)
 {
-    ENM_NVIC_ERROR_STATUS_t locStatus = enmNVIC_Status_NOT_OK;
-    uint32_t locInterruptNumber=interruptRequestNumber;
-    if(locInterruptNumber < MAX_NUMBER_OF_INTERRUPTS)
-    {
-        locStatus = enmNVIC_Status_Wrong_Arguments;
-    }
-    else
-    {
-        NVIC->ISER[locInterruptNumber / REGISTER_WIDTH] |= (1<<(locInterruptNumber % REGISTER_WIDTH));
-        locStatus=enmNVIC_Status_OK;
-    }
-    return locStatus;
+	ENM_NVIC_ERROR_STATUS_t locStatus = enmNVIC_Status_NOT_OK;
+	uint32_t locInterruptNumber=interruptRequestNumber;
+	if(locInterruptNumber > MAX_NUMBER_OF_INTERRUPTS)
+	{
+		locStatus = enmNVIC_Status_Wrong_Arguments;
+	}
+	else
+	{
+		NVIC->ISER[locInterruptNumber / REGISTER_WIDTH] |= (1<<(locInterruptNumber % REGISTER_WIDTH));
+		locStatus=enmNVIC_Status_OK;
+	}
+	return locStatus;
 }
 ENM_NVIC_ERROR_STATUS_t nvicDisableIrq(ENM_ISQ_t interruptRequestNumber)
 {
-    ENM_NVIC_ERROR_STATUS_t locStatus = enmNVIC_Status_NOT_OK;
-    uint32_t locInterruptNumber=interruptRequestNumber;
-    if(locInterruptNumber > MAX_NUMBER_OF_INTERRUPTS)
-    {
-        locStatus = enmNVIC_Status_Wrong_Arguments;
-    }
-    else
-    {
-        NVIC->ICER[locInterruptNumber / REGISTER_WIDTH] |= (1<<(locInterruptNumber % REGISTER_WIDTH));
-        locStatus=enmNVIC_Status_OK;
-    }
-    return locStatus;
+	ENM_NVIC_ERROR_STATUS_t locStatus = enmNVIC_Status_NOT_OK;
+	uint32_t locInterruptNumber=interruptRequestNumber;
+	if(locInterruptNumber > MAX_NUMBER_OF_INTERRUPTS)
+	{
+		locStatus = enmNVIC_Status_Wrong_Arguments;
+	}
+	else
+	{
+		NVIC->ICER[locInterruptNumber / REGISTER_WIDTH] |= (1<<(locInterruptNumber % REGISTER_WIDTH));
+		locStatus=enmNVIC_Status_OK;
+	}
+	return locStatus;
 }
 ENM_NVIC_ERROR_STATUS_t nvicSetPendingIrq(ENM_ISQ_t interruptRequestNumber)
 {
-    ENM_NVIC_ERROR_STATUS_t locStatus = enmNVIC_Status_NOT_OK;
-    uint32_t locInterruptNumber=interruptRequestNumber;
-    if(locInterruptNumber > MAX_NUMBER_OF_INTERRUPTS)
-    {
-        locStatus = enmNVIC_Status_Wrong_Arguments;
-    }
-    else
-    {
-        NVIC->ISPR[locInterruptNumber / REGISTER_WIDTH] |= (1<<(locInterruptNumber % REGISTER_WIDTH));
-        locStatus=enmNVIC_Status_OK;
-    }
-    return locStatus;
+	ENM_NVIC_ERROR_STATUS_t locStatus = enmNVIC_Status_NOT_OK;
+	uint32_t locInterruptNumber=interruptRequestNumber;
+	if(locInterruptNumber > MAX_NUMBER_OF_INTERRUPTS)
+	{
+		locStatus = enmNVIC_Status_Wrong_Arguments;
+	}
+	else
+	{
+		NVIC->ISPR[locInterruptNumber / REGISTER_WIDTH] |= (1<<(locInterruptNumber % REGISTER_WIDTH));
+		locStatus=enmNVIC_Status_OK;
+	}
+	return locStatus;
 }
 ENM_NVIC_ERROR_STATUS_t nvicClearPendingIrq(ENM_ISQ_t interruptRequestNumber)
 {
-    ENM_NVIC_ERROR_STATUS_t locStatus = enmNVIC_Status_NOT_OK;
-    uint32_t locInterruptNumber=interruptRequestNumber;
-    if(locInterruptNumber > MAX_NUMBER_OF_INTERRUPTS)
-    {
-        locStatus = enmNVIC_Status_Wrong_Arguments;
-    }
-    else
-    {
-        NVIC->ICPR[locInterruptNumber / REGISTER_WIDTH] |= (1<<(locInterruptNumber % REGISTER_WIDTH));
-        locStatus=enmNVIC_Status_OK;
-    }
-    return locStatus;
+	ENM_NVIC_ERROR_STATUS_t locStatus = enmNVIC_Status_NOT_OK;
+	uint32_t locInterruptNumber=interruptRequestNumber;
+	if(locInterruptNumber > MAX_NUMBER_OF_INTERRUPTS)
+	{
+		locStatus = enmNVIC_Status_Wrong_Arguments;
+	}
+	else
+	{
+		NVIC->ICPR[locInterruptNumber / REGISTER_WIDTH] |= (1<<(locInterruptNumber % REGISTER_WIDTH));
+		locStatus=enmNVIC_Status_OK;
+	}
+	return locStatus;
 }
 ENM_NVIC_ERROR_STATUS_t nvicGetPendingIrq(ENM_ISQ_t interruptRequestNumber, uint32_t * value)
 {
-    ENM_NVIC_ERROR_STATUS_t locStatus = enmNVIC_Status_NOT_OK;
-    uint32_t locInterruptNumber=interruptRequestNumber;
-    uint8_t locValue;
+	ENM_NVIC_ERROR_STATUS_t locStatus = enmNVIC_Status_NOT_OK;
+	uint32_t locInterruptNumber=interruptRequestNumber;
+	uint8_t locValue;
 
-    if(locInterruptNumber > MAX_NUMBER_OF_INTERRUPTS)
-    {
-        locStatus = enmNVIC_Status_Wrong_Arguments;
-    }
-    else if (value == NULL)
-    {
-        locStatus=enmNVIC_Status_NULL_Pointer;
-    }
-    else
-    {
-        locValue= (((NVIC->ICPR[locInterruptNumber / REGISTER_WIDTH]) >> (locInterruptNumber % REGISTER_WIDTH)) & 0x01);
-        *value=locValue;
-        locStatus=enmNVIC_Status_OK;
-    }
-    return locStatus;
+	if(locInterruptNumber > MAX_NUMBER_OF_INTERRUPTS)
+	{
+		locStatus = enmNVIC_Status_Wrong_Arguments;
+	}
+	else if (value == NULL)
+	{
+		locStatus=enmNVIC_Status_NULL_Pointer;
+	}
+	else
+	{
+		locValue= (((NVIC->ICPR[locInterruptNumber / REGISTER_WIDTH]) >> (locInterruptNumber % REGISTER_WIDTH)) & 0x01);
+		*value=locValue;
+		locStatus=enmNVIC_Status_OK;
+	}
+	return locStatus;
 }
 ENM_NVIC_ERROR_STATUS_t nvicGetActive (ENM_ISQ_t interruptRequestNumber, uint32_t * value)
 {
-    ENM_NVIC_ERROR_STATUS_t locStatus = enmNVIC_Status_NOT_OK;
-    uint32_t locInterruptNumber=interruptRequestNumber;
-    uint8_t locValue;
+	ENM_NVIC_ERROR_STATUS_t locStatus = enmNVIC_Status_NOT_OK;
+	uint32_t locInterruptNumber=interruptRequestNumber;
+	uint8_t locValue;
 
-    if(locInterruptNumber > MAX_NUMBER_OF_INTERRUPTS)
-    {
-        locStatus = enmNVIC_Status_Wrong_Arguments;
-    }
-    else if (value == NULL)
-    {
-        locStatus=enmNVIC_Status_NULL_Pointer;
-    }
-    else
-    {
-        locValue= (((NVIC->IAPR[locInterruptNumber / REGISTER_WIDTH]) >> (locInterruptNumber % REGISTER_WIDTH)) & 0x01);
-        *value=locValue;
-        locStatus=enmNVIC_Status_OK;
-    }
-    return locStatus;
+	if(locInterruptNumber > MAX_NUMBER_OF_INTERRUPTS)
+	{
+		locStatus = enmNVIC_Status_Wrong_Arguments;
+	}
+	else if (value == NULL)
+	{
+		locStatus=enmNVIC_Status_NULL_Pointer;
+	}
+	else
+	{
+		locValue= (((NVIC->IAPR[locInterruptNumber / REGISTER_WIDTH]) >> (locInterruptNumber % REGISTER_WIDTH)) & 0x01);
+		*value=locValue;
+		locStatus=enmNVIC_Status_OK;
+	}
+	return locStatus;
 }
 ENM_NVIC_ERROR_STATUS_t nvicSetPriority(ENM_ISQ_t interruptRequestNumber, ENM_GroupPriority_t groupPriority, ENM_SubGroupPriority_t subGroupPriority)
 {
-    ENM_NVIC_ERROR_STATUS_t locStatus = enmNVIC_Status_NOT_OK;
-    uint32_t locInterruptNumber=interruptRequestNumber;
-    uint32_t locPriorityGrouping=0;
-    uint8_t locPriority=0;
-    if(locInterruptNumber > MAX_NUMBER_OF_INTERRUPTS || groupPriority > 15 || subGroupPriority > 15)
-    {
-        locStatus = enmNVIC_Status_Wrong_Arguments;
-    }
-    else
-    {
-        locStatus = nvicGetPriorityGrouping(&locPriorityGrouping);
-        if (!locStatus)
-        {
-            locStatus=enmNVIC_Status_NOT_OK;
-        }
-        else
-        {
-            locPriority = (uint8_t)(subGroupPriority | (groupPriority << ((locPriorityGrouping - PRIORITY_GROUP_BASE)/ 0x100)));
-            NVIC->IPR[locInterruptNumber] =(uint8_t)(locPriority <<4);
-            locStatus = enmNVIC_Status_OK;
-        }
-    }
-    return locStatus;
+	ENM_NVIC_ERROR_STATUS_t locStatus = enmNVIC_Status_NOT_OK;
+	uint32_t locInterruptNumber=interruptRequestNumber;
+	uint32_t locPriorityGrouping=0;
+	uint8_t locPriority=0;
+	if(locInterruptNumber > MAX_NUMBER_OF_INTERRUPTS || groupPriority > 15 || subGroupPriority > 15)
+	{
+		locStatus = enmNVIC_Status_Wrong_Arguments;
+	}
+	else
+	{
+		locStatus = nvicGetPriorityGrouping(&locPriorityGrouping);
+		if (!locStatus)
+		{
+			locStatus=enmNVIC_Status_NOT_OK;
+		}
+		else
+		{
+			locPriority = (uint8_t)(subGroupPriority | (groupPriority << ((locPriorityGrouping - PRIORITY_GROUP_BASE)/ 0x100)));
+			NVIC->IPR[locInterruptNumber] =(uint8_t)(locPriority <<4);
+			locStatus = enmNVIC_Status_OK;
+		}
+	}
+	return locStatus;
 }
 ENM_NVIC_ERROR_STATUS_t nvicGetPriority(ENM_ISQ_t interruptRequestNumber, uint8_t * value)
 {
-    ENM_NVIC_ERROR_STATUS_t locStatus = enmNVIC_Status_NOT_OK;
-    uint32_t locInterruptNumber=interruptRequestNumber;
-    uint8_t locValue;
+	ENM_NVIC_ERROR_STATUS_t locStatus = enmNVIC_Status_NOT_OK;
+	uint32_t locInterruptNumber=interruptRequestNumber;
+	uint8_t locValue;
 
-    if(locInterruptNumber > MAX_NUMBER_OF_INTERRUPTS)
-    {
-        locStatus = enmNVIC_Status_Wrong_Arguments;
-    }
-    else if (value == NULL)
-    {
-        locStatus=enmNVIC_Status_NULL_Pointer;
-    }
-    else
-    {
-        locValue= ((NVIC->IPR[locInterruptNumber]) >> (4));
-        *value=locValue;
-        locStatus=enmNVIC_Status_OK;
-    }
-    return locStatus;
+	if(locInterruptNumber > MAX_NUMBER_OF_INTERRUPTS)
+	{
+		locStatus = enmNVIC_Status_Wrong_Arguments;
+	}
+	else if (value == NULL)
+	{
+		locStatus=enmNVIC_Status_NULL_Pointer;
+	}
+	else
+	{
+		locValue= ((NVIC->IPR[locInterruptNumber]) >> (4));
+		*value=locValue;
+		locStatus=enmNVIC_Status_OK;
+	}
+	return locStatus;
 }
 ENM_NVIC_ERROR_STATUS_t nvicSetPriorityGrouping(uint32_t priorityGrouping)
 {
-    ENM_NVIC_ERROR_STATUS_t locStatus = enmNVIC_Status_NOT_OK;
-    uint32_t locGroupPriority=priorityGrouping;
-    uint32_t locRegister= SCB->AIRCR;
-    if(!(priorityGrouping & PRIORITY_GROUP_CHECK))
-    {
-        locStatus = enmNVIC_Status_Wrong_Arguments;
-    }
-    else
-    {
-       locRegister &=PRIORITY_GROUP_CLEAR;
-       locRegister |=(locGroupPriority &(~PRIORITY_GROUP_CHECK));
-       SCB->AIRCR= locRegister;
-       locStatus=enmNVIC_Status_OK;
-    }
-    return locStatus;
+	ENM_NVIC_ERROR_STATUS_t locStatus = enmNVIC_Status_NOT_OK;
+	uint32_t locGroupPriority=priorityGrouping;
+	uint32_t locRegister= SCB->AIRCR;
+	if(!(priorityGrouping & PRIORITY_GROUP_CHECK))
+	{
+		locStatus = enmNVIC_Status_Wrong_Arguments;
+	}
+	else
+	{
+		locRegister &=PRIORITY_GROUP_CLEAR;
+		locRegister |=(locGroupPriority &(~PRIORITY_GROUP_CHECK));
+		SCB->AIRCR= locRegister;
+		locStatus=enmNVIC_Status_OK;
+	}
+	return locStatus;
 }
 ENM_NVIC_ERROR_STATUS_t nvicTriggerSoftwareInterrupt(ENM_ISQ_t interruptRequestNumber)
 {
-    ENM_NVIC_ERROR_STATUS_t locStatus = enmNVIC_Status_NOT_OK;
-    uint32_t locInterruptNumber=interruptRequestNumber;
-    if(locInterruptNumber > MAX_NUMBER_OF_INTERRUPTS)
-    {
-        locStatus = enmNVIC_Status_Wrong_Arguments;
-    }
-    else
-    {
-        NVIC_STIR = locInterruptNumber;
-        locStatus=enmNVIC_Status_OK;
-    }
-    return locStatus;
+	ENM_NVIC_ERROR_STATUS_t locStatus = enmNVIC_Status_NOT_OK;
+	uint32_t locInterruptNumber=interruptRequestNumber;
+	if(locInterruptNumber > MAX_NUMBER_OF_INTERRUPTS)
+	{
+		locStatus = enmNVIC_Status_Wrong_Arguments;
+	}
+	else
+	{
+		NVIC_STIR = locInterruptNumber;
+		locStatus=enmNVIC_Status_OK;
+	}
+	return locStatus;
 }
 static ENM_NVIC_ERROR_STATUS_t nvicGetPriorityGrouping(uint32_t *priorityGrouping)
 {
-    ENM_NVIC_ERROR_STATUS_t locStatus = enmNVIC_Status_NOT_OK;
-    uint32_t locValue;
+	ENM_NVIC_ERROR_STATUS_t locStatus = enmNVIC_Status_NOT_OK;
+	uint32_t locValue;
 
-    if (priorityGrouping == NULL)
-    {
-        locStatus=enmNVIC_Status_NULL_Pointer;
-    }
-    else
-    {
-        locValue= SCB->AIRCR;
-        *priorityGrouping = locValue;
-        locStatus=enmNVIC_Status_OK;
-    }
-    return locStatus;
+	if (priorityGrouping == NULL)
+	{
+		locStatus=enmNVIC_Status_NULL_Pointer;
+	}
+	else
+	{
+		locValue= SCB->AIRCR;
+		*priorityGrouping = locValue;
+		locStatus=enmNVIC_Status_OK;
+	}
+	return locStatus;
 }
