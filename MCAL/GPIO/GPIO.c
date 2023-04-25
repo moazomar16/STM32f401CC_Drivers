@@ -621,8 +621,6 @@ ENM_ErrorStatus_t gpioSetPinValue(void * GPIO_PORT,GPIO_PIN_t gpioPin, uint32_t 
     {
         if ( PIN_HIGH == pinState )
         {
-            /* adding 16 to access set bits */
-            gpioPin+= 16;
             /* getting the current value of the BSRR register */
             locRegister =GPIO->BSRR;
             /* Clearing the required bit */
@@ -635,6 +633,8 @@ ENM_ErrorStatus_t gpioSetPinValue(void * GPIO_PORT,GPIO_PIN_t gpioPin, uint32_t 
         }
         else if (PIN_LOW == pinState)
         {
+        	/* adding 16 to access set bits */
+        	gpioPin+= 16;
             /* getting the current value of the BSRR register */
             locRegister =GPIO->BSRR;
             /* Clearing the required bit */
