@@ -21,7 +21,8 @@ typedef enum
     enm_Status_NOT_Ready,
     enm_Status_MORE_THAN_ONE_OPTION,
     enm_Status_TIME_OUT,
-    enm_Status_EXCEEDS_MAX_VALUE
+    enm_Status_EXCEEDS_MAX_VALUE,
+    enm_Status_CPU_LOAD_100
 }ENM_ErrorStatus_t;
 
 #endif /*WORKINGDIR_ERROR_STATUS_H*/
