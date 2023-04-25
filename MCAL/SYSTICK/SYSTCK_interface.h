@@ -13,37 +13,36 @@
 
 
 
+#define SYSTCK_INTERRUPT_ENABLE             0x00000002
+#define SYSTCK_INTERRUPT_DISABLE            0x00000000
+#define SYSTCK_CLK_SOURCE_AHB_BY_8          0x00000000
+#define SYSTCK_CLK_SOURCE_AHB               0x00000004
 
-#define SYSTCK_INTERRUPT_ENABLE             0xD0000002
-#define SYSTCK_INTERRUPT_DISABLE            0xDFFFFFFD
-#define SYSTCK_CLK_SOURCE_AHB_BY_8          0xDFFFFFFB
-#define SYSTCK_CLK_SOURCE_AHB               0xD0000004
+#define SYSTICK_CLOCK_SOURCE                SYSTCK_CLK_SOURCE_AHB
+#define SYSTICK_INTERRUPT_STATE             SYSTCK_INTERRUPT_ENABLE
 
-/**
- *  @brief SysTick error status
- **/
-typedef enum
-{
-    enmSYSTCK_Status_OK=0,
-    enmSYSTCK_Status_NOT_OK,
-    enmSYSTCK_Status_NULL_Pointer,
-    enmSYSTCK_Status_Wrong_Arguments,
-    enmSYSTCK_Status_TIME_OUT,
-    enmSYSTCK_Status_EXCEEDS_MAX_VALUE
-}ENM_SYSTCK_ERROR_STATUS_t;
+
+
 /**
  * @brief call back function type
  */
 typedef void(* callBackFun_t)(void);
 
+
 /**
  *
- * @brief This function responsible for setting the preload value of the counter
- * @warning preload value must be less than or equal to ( 0x00FFFFFF )
- * @param preLoadValue
+ * @brief This function responsible for initializing the systick with the clock source and to enable interrupt
  * @return locStatus
  **/
-ENM_SYSTCK_ERROR_STATUS_t systckStartCounter(uint32_t preLoadValue);
+ENM_ErrorStatus_t systckInit(void);
+
+
+/**
+ *
+ * @brief This function responsible for starting the counter
+ * @return locStatus
+ **/
+ENM_ErrorStatus_t systckStart(void);
 /**
  *
  * @brief This function responsible for stopping the counter
@@ -52,7 +51,7 @@ ENM_SYSTCK_ERROR_STATUS_t systckStartCounter(uint32_t preLoadValue);
  * @return locStatus
  *
  **/
-ENM_SYSTCK_ERROR_STATUS_t systckStopCounter(void);
+ENM_ErrorStatus_t systckStopCounter(void);
 /**
  *
  * @brief This function responsible for getting the remaining value of the counter
@@ -60,15 +59,7 @@ ENM_SYSTCK_ERROR_STATUS_t systckStopCounter(void);
  * @return locStatus
  *
  **/
-ENM_SYSTCK_ERROR_STATUS_t systckGetCurrentValue(uint32_t * value);
-/**
- *
- * @brief This function responsible for controlling the interrupt status of the counter
- * @param interruptStatus
- * @return locStatus
- *
- **/
-ENM_SYSTCK_ERROR_STATUS_t systckInterruptStatus(uint8_t interruptStatus);
+ENM_ErrorStatus_t systckGetCurrentValue(uint32_t * value);
 /**
  *
  * @brief This function responsible for setting the call back function that will be used when the counter finishes
@@ -76,8 +67,16 @@ ENM_SYSTCK_ERROR_STATUS_t systckInterruptStatus(uint8_t interruptStatus);
  * @return locStatus
  *
  **/
-ENM_SYSTCK_ERROR_STATUS_t systckSetCallBackFunction(callBackFun_t cbf);
+ENM_ErrorStatus_t systckSetCallBackFunction(callBackFun_t cbf);
 
+/**
+ *
+ * @brief this function is used to set periods
+ * @param TickTime
+ * @param SystemClock
+ * @return locStatus
+ */
+ENM_ErrorStatus_t systckSetPeriodTimeMS(uint32_t TickTime,uint32_t SystemClock);
 
 
 

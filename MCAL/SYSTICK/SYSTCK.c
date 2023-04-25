@@ -10,6 +10,7 @@
 
 #include "Libraries/Std_Types.h"
 #include "Libraries/Bit_Math.h"
+#include "Libraries/Error_Status.h"
 #include "SYSTCK_interface.h"
 
 /**
@@ -26,8 +27,7 @@
  */
 #define SYSTCK_DISABLE_COUNTER       0xFFFFFFFE
 #define ZERO                         0
-#define SYSTCK_ENABLE_INTERRUPT      0x00000002
-#define SYSTCK_DISABLE_INTERRUPT     0xFFFFFFFD
+
 
 /**
  *
@@ -61,20 +61,105 @@ typedef struct
 
 static callBackFun_t gpCallBackFunctionPointer=NULL;
 
-void SysTick_Handler(void){
+/**
+ *
+ * @brief This function responsible for setting the preload value of the counter
+ * @warning preload value must be less than or equal to ( 0x00FFFFFF )
+ * @param preLoadValue
+ * @return locStatus
+ **/
+static ENM_ErrorStatus_t systckLoadCounter(uint32_t preLoadValue );
 
+void SysTick_Handler()
+{
     gpCallBackFunctionPointer();
-
 }
 
-ENM_SYSTCK_ERROR_STATUS_t systckStartCounter(uint32_t preLoadValue)
+ENM_ErrorStatus_t systckInit(void)
 {
-    ENM_SYSTCK_ERROR_STATUS_t locStatus = enmSYSTCK_Status_NOT_OK;
+    ENM_ErrorStatus_t locStatus = enm_Status_NOT_OK;
+    uint32_t locRegister=0;
+    locRegister = SYSTCK->CTRL;
+    locRegister &= ~(0x7);
+    locRegister |= SYSTICK_INTERRUPT_STATE | SYSTICK_CLOCK_SOURCE;
+    SYSTCK->CTRL =locRegister;
+    locStatus =enm_Status_OK;
+    return locStatus;
+
+}
+ENM_ErrorStatus_t systckSetPeriodTimeMS(uint32_t TickTime,uint32_t SystemClock)
+{
+    ENM_ErrorStatus_t locStatus = enm_Status_NOT_OK;
+    uint32_t locTick=0;
+    locTick = (SystemClock / 1000) * TickTime;
+    systckLoadCounter(locTick);
+    locStatus =enm_Status_OK;
+    return locStatus;
+}
+ENM_ErrorStatus_t systckStart(void)
+{
+    ENM_ErrorStatus_t locStatus = enm_Status_NOT_OK;
+    uint32_t locRegister=0;
+    /* start the counter */
+    locRegister = SYSTCK->CTRL;
+    locRegister |=SYSTCK_ENABLE_COUNTER;
+    SYSTCK->CTRL=locRegister;
+    locStatus = enm_Status_OK;
+    return locStatus;
+}
+ENM_ErrorStatus_t systckStopCounter(void)
+{
+    ENM_ErrorStatus_t locStatus = enm_Status_NOT_OK;
+    uint32_t locRegister=0;
+    /* disable the counter to reload new value */
+    locRegister = SYSTCK->CTRL;
+    locRegister &=SYSTCK_DISABLE_COUNTER;
+    SYSTCK->CTRL=locRegister;
+    locStatus =enm_Status_OK;
+    return locStatus;
+}
+ENM_ErrorStatus_t systckGetCurrentValue(uint32_t * value)
+{
+    ENM_ErrorStatus_t locStatus = enm_Status_NOT_OK;
+    uint32_t locValue=0;
+    /* check if null pointer  */
+    if (!value)
+    {
+        locStatus = enm_Status_NULL_Pointer;
+    }
+    else
+    {
+        /* reading the value register */
+        locValue=SYSTCK->VAL;
+        *value=locValue;
+        locStatus= enm_Status_OK;
+    }
+    return locStatus;
+}
+ENM_ErrorStatus_t systckSetCallBackFunction(callBackFun_t cbf)
+{
+    ENM_ErrorStatus_t locStatus = enm_Status_NOT_OK;
+    if (!cbf)
+    {
+        locStatus = enm_Status_NULL_Pointer;
+    }
+    else
+    {
+        gpCallBackFunctionPointer=cbf;
+        locStatus = enm_Status_OK;
+    }
+
+    return locStatus;
+}
+
+static ENM_ErrorStatus_t systckLoadCounter(uint32_t preLoadValue )
+{
+    ENM_ErrorStatus_t locStatus = enm_Status_NOT_OK;
     uint32_t locPreLoadValue = preLoadValue;
     uint32_t locRegister=0;
     if (locPreLoadValue > MAX_LOAD_VALUE)
     {
-        locStatus =enmSYSTCK_Status_EXCEEDS_MAX_VALUE;
+        locStatus =enm_Status_EXCEEDS_MAX_VALUE;
     }
     else
     {
@@ -91,63 +176,9 @@ ENM_SYSTCK_ERROR_STATUS_t systckStartCounter(uint32_t preLoadValue)
         /* clear the value of the val register */
         locRegister = SYSTCK->VAL;
         locRegister=ZERO;
-        /* start the counter */
-        locRegister = SYSTCK->CTRL;
-        locRegister |=SYSTCK_ENABLE_COUNTER;
-        SYSTCK->CTRL=locRegister;
-        locStatus = enmSYSTCK_Status_OK;
+        SYSTCK->VAL = locRegister ;
+        locStatus = enm_Status_OK;
     }
 
     return locStatus;
 }
-ENM_SYSTCK_ERROR_STATUS_t systckStopCounter(void)
-{
-    ENM_SYSTCK_ERROR_STATUS_t locStatus = enmSYSTCK_Status_NOT_OK;
-    uint32_t locRegister=0;
-    /* disable the counter to reload new value */
-    locRegister = SYSTCK->CTRL;
-    locRegister &=SYSTCK_DISABLE_COUNTER;
-    SYSTCK->CTRL=locRegister;
-    locStatus =enmSYSTCK_Status_OK;
-    return locStatus;
-}
-ENM_SYSTCK_ERROR_STATUS_t systckGetCurrentValue(uint32_t * value)
-{
-    ENM_SYSTCK_ERROR_STATUS_t locStatus = enmSYSTCK_Status_NOT_OK;
-    uint32_t locValue=0;
-    /* check if null pointer  */
-    if (!value)
-    {
-        locStatus = enmSYSTCK_Status_NULL_Pointer;
-    }
-    else
-    {
-        /* reading the value register */
-        locValue=SYSTCK->VAL;
-        *value=locValue;
-        locStatus= enmSYSTCK_Status_OK;
-    }
-    return locStatus;
-}
-ENM_SYSTCK_ERROR_STATUS_t systckInterruptStatus(uint8_t interruptStatus)
-{
-    ENM_SYSTCK_ERROR_STATUS_t locStatus = enmSYSTCK_Status_NOT_OK;
-
-    return locStatus;
-}
-ENM_SYSTCK_ERROR_STATUS_t systckSetCallBackFunction(callBackFun_t cbf)
-{
-    ENM_SYSTCK_ERROR_STATUS_t locStatus = enmSYSTCK_Status_NOT_OK;
-    if (!cbf)
-    {
-        locStatus = enmSYSTCK_Status_NULL_Pointer;
-    }
-    else
-    {
-        gpCallBackFunctionPointer=cbf;
-        locStatus = enmSYSTCK_Status_OK;
-    }
-
-    return locStatus;
-}
-
